@@ -21,9 +21,8 @@ jobs:
       - name: Automated Vulnerability Scan (Trivy)
         uses: aquasecurity/trivy-action@0.33.1
         with:
-      username: ${{ secrets.DOCKERHUB_USERNAME }}
-      password: ${{ secrets.DOCKERHUB_TOKEN }}
           scan-type: 'fs'
+          skip-dirs: 'node_modules,backend/node_modules,client/node_modules'
           ignore-unfixed: true
           format: 'sarif'
           output: 'trivy-results.sarif'
@@ -32,14 +31,10 @@ jobs:
       - name: Upload SARIF results to GitHub Code Scanning
         uses: github/codeql-action/upload-sarif@v2
         with:
-      username: ${{ secrets.DOCKERHUB_USERNAME }}
-      password: ${{ secrets.DOCKERHUB_TOKEN }}
           sarif_file: 'trivy-results.sarif'
 
       - name: Upload Trivy SARIF artifact
         uses: actions/upload-artifact@v4
         with:
-      username: ${{ secrets.DOCKERHUB_USERNAME }}
-      password: ${{ secrets.DOCKERHUB_TOKEN }}
           name: trivy-sarif
           path: trivy-results.sarif
